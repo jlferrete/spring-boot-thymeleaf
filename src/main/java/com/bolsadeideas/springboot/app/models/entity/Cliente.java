@@ -16,15 +16,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "clientes")
 public class Cliente implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,10 +34,10 @@ public class Cliente implements Serializable {
 
 	@NotEmpty
 	private String nombre;
-
+	
 	@NotEmpty
 	private String apellido;
-
+	
 	@NotEmpty
 	@Email
 	private String email;
@@ -43,18 +45,18 @@ public class Cliente implements Serializable {
 	@NotNull
 	@Column(name = "create_at")
 	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date createAt;
-
-	@OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	
+	@OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Factura> facturas;
-
-	private String foto;
-
+	
 	public Cliente() {
 		facturas = new ArrayList<Factura>();
 	}
 
+	private String foto;
+	
 	public Long getId() {
 		return id;
 	}
@@ -110,19 +112,14 @@ public class Cliente implements Serializable {
 	public void setFacturas(List<Factura> facturas) {
 		this.facturas = facturas;
 	}
-
+	
 	public void addFactura(Factura factura) {
 		facturas.add(factura);
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-	
 	@Override
 	public String toString() {
 		return nombre + " " + apellido;
 	}
-	
-	private static final long serialVersionUID = 1L;
+
 }
